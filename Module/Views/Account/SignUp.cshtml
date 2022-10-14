@@ -1,0 +1,103 @@
+﻿@model Module.Models.UserModel
+
+@{
+    ViewData["Title"] = "SignUp";
+}
+
+<h1>SignUp</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SignUp">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input type="password" asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="control-label"></label>
+                <input type="password" asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contact" class="control-label"></label>
+                <input asp-for="Contact" class="form-control" />
+                <span asp-validation-for="Contact" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="control-label">Male</label>
+                <input type="radio" asp-for="Gender" value="true" class="form-conrol">
+                <label class="control-label">Female</label>
+                <input type="radio" asp-for="Gender" value="false" label class="form-conrol">
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Terms" />
+                    </label>
+                    <label class="control-label">Accept Terms</label>
+                     <span asp-validation-for="Terms" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Sign Up" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        jQuery.validator.unobtrusive.adapters.add("chkbox", function (options) {
+            // jQuery Validate equates "required" with "mandatory" for checkbox elements
+            if (options.element.tagName.toUpperCase() == "INPUT" && options.element.type.toUpperCase() == "CHECKBOX") {
+               // setValidationValues(options, "required", true);
+                options.rules["required"] = true;
+                if (options.message) {
+                    options.messages["required"] = options.message;
+                }
+            }
+        });
+    </script>
+     <script>
+        jQuery.validator.unobtrusive.adaptersadapters.add("radiobutton", ["url", "type", "additionalfields"], function (options) {
+            var value = {
+                url: options.params.url,
+                type: options.params.type || "GET",
+                data: {}
+            },
+                prefix = getModelPrefix(options.element.name);
+
+            $.each(splitAndTrim(options.params.additionalfields || options.element.name), function (i, fieldName) {
+                var paramName = appendModelPrefix(fieldName, prefix);
+                value.data[paramName] = function () {
+                    var field = $(options.form).find(":input").filter("[name='" + escapeAttributeValue(paramName) + "']");
+                    // For checkboxes and radio buttons, only pick up values from checked fields.
+                    if (field.is(":radio")) {
+                        options.rules["required"] = true;
+                        if (options.message) {
+                            options.messages["required"] = options.message;
+                        }
+                    }
+                    return field.val();
+                };
+            });
+    </script>
+}
